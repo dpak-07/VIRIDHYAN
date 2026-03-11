@@ -5718,7 +5718,7 @@ export default function Viridyan() {
                 Enter the Garden →
               </button>
               <button className="bs" onClick={() => go("world3d")}>
-                Explore 3D World
+                Explore this world
               </button>
               <button className="bs" onClick={() => go("garden")}>
                 🌱 Start Growing
