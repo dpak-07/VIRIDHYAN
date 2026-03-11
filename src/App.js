@@ -1,5 +1,6 @@
 import { useState, useRef, useMemo, useEffect } from "react";
 import React from "react";
+import ViridyanGarden from "./ViridyanGarden";
 
 // ─── 100 PLANTS ────────────────────────────────────────────────────────────
 const PLANTS = [
@@ -5609,6 +5610,7 @@ export default function Viridyan() {
       <style>{STYLES}</style>
 
       {/* NAV */}
+      {page !== "world3d" && (
       <nav className="nav">
         <div className="nav-logo" onClick={() => go("home")}>
           🌿 Viridyan
@@ -5659,6 +5661,7 @@ export default function Viridyan() {
           />
         </div>
       </nav>
+      )}
 
       {/* HOME */}
       {page === "home" && (
@@ -5713,6 +5716,9 @@ export default function Viridyan() {
             >
               <button className="bp" onClick={() => go("explore")}>
                 Enter the Garden →
+              </button>
+              <button className="bs" onClick={() => go("world3d")}>
+                Explore 3D World
               </button>
               <button className="bs" onClick={() => go("garden")}>
                 🌱 Start Growing
@@ -5956,6 +5962,8 @@ export default function Viridyan() {
       )}
 
       {/* EXPLORE */}
+      {page === "world3d" && <ViridyanGarden onBack={() => go("home")} />}
+
       {page === "explore" && !selPlant && (
         <div className="page">
           <div className="sh">
