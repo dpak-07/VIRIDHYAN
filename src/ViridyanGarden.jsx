@@ -618,6 +618,15 @@ export default function ViridyanGarden({ onBack }) {
           color:"rgba(120,195,120,0.65)",fontSize:8,letterSpacing:3,zIndex:2,pointerEvents:"none"}}>MAP</div>
         <MiniMap playerPos={pos} />
       </div>
+      <div style={{position:"absolute",bottom:36,right:150,
+        background:"rgba(6,18,6,0.9)",border:"1px solid rgba(76,175,80,0.35)",
+        borderRadius:16,padding:"8px 12px",boxShadow:"0 4px 18px rgba(0,0,0,0.5)",
+        color:"#c8e6c9",fontSize:10,letterSpacing:1.2,pointerEvents:"none",
+        display:"flex",alignItems:"center",gap:6,animation:"shake 2.8s ease-in-out infinite"}}>
+        <span style={{color:"#81c784"}}>Made with love</span>
+        <span style={{color:"#e57373"}}>♥</span>
+        <span style={{color:"#a5d6a7"}}>Priya Dharshini</span>
+      </div>
 
       {/* Touch D-pad */}
       <div style={{position:"absolute",bottom:148,right:22,width:130,height:130,userSelect:"none"}}>
@@ -722,6 +731,7 @@ export default function ViridyanGarden({ onBack }) {
       <style>{`
         @keyframes fadeIn{from{opacity:0}to{opacity:1}}
         @keyframes fadeUp{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translateX(-50%)}}
+        @keyframes shake{0%,100%{transform:translate(0,0) rotate(0deg)}20%{transform:translate(0.5px,-0.6px) rotate(-0.4deg)}50%{transform:translate(-0.6px,0.4px) rotate(0.35deg)}80%{transform:translate(0.4px,0.2px) rotate(-0.25deg)}}
         *{box-sizing:border-box} button:active{transform:scale(0.94)}
       `}</style>
     </div>

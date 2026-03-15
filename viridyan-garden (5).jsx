@@ -138,6 +138,39 @@ function buildScene(canvas) {
   const mat=(c,r=0.85,m=0)=>{const k=`${c}_${r}`;return MC[k]||(MC[k]=new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m}));};
   const TRUNK=mat(0x5c3d1e,0.95); const DTRUNK=mat(0x3d2a10,0.95);
 
+  // Credits sign (3D)
+  const creditsCanvas=document.createElement("canvas");
+  creditsCanvas.width=512; creditsCanvas.height=256;
+  const cctx=creditsCanvas.getContext("2d");
+  cctx.clearRect(0,0,creditsCanvas.width,creditsCanvas.height);
+  cctx.fillStyle="rgba(6,16,6,0.78)";
+  cctx.strokeStyle="rgba(120,200,120,0.55)";
+  cctx.lineWidth=6;
+  cctx.fillRect(10,10,creditsCanvas.width-20,creditsCanvas.height-20);
+  cctx.strokeRect(10,10,creditsCanvas.width-20,creditsCanvas.height-20);
+  cctx.textAlign="center"; cctx.textBaseline="middle";
+  cctx.fillStyle="#c8e6c9";
+  cctx.font="600 44px 'Palatino Linotype','Book Antiqua',Palatino,serif";
+  cctx.fillText("Made with love",creditsCanvas.width/2,creditsCanvas.height/2-44);
+  cctx.fillStyle="#e57373";
+  cctx.font="700 52px 'Palatino Linotype','Book Antiqua',Palatino,serif";
+  cctx.fillText("♥",creditsCanvas.width/2,creditsCanvas.height/2+4);
+  cctx.fillStyle="#a5d6a7";
+  cctx.font="700 38px 'Palatino Linotype','Book Antiqua',Palatino,serif";
+  cctx.fillText("Priya Dharshini",creditsCanvas.width/2,creditsCanvas.height/2+56);
+  const creditsTex=new THREE.CanvasTexture(creditsCanvas);
+  creditsTex.colorSpace=THREE.SRGBColorSpace;
+  creditsTex.needsUpdate=true;
+  const creditsMat=new THREE.MeshBasicMaterial({map:creditsTex,transparent:true});
+  const creditsBoard=new THREE.Mesh(new THREE.PlaneGeometry(4.6,2.3),creditsMat);
+  creditsBoard.position.set(0,1.6,0);
+  creditsBoard.castShadow=true;
+  const creditsSign=new THREE.Group();
+  creditsSign.add(creditsBoard);
+  const cX=4.2, cZ=10;
+  creditsSign.position.set(cX,sn(cX,cZ),cZ);
+  scene.add(creditsSign);
+
   // Plant builders
   function mkGroundCover(p,px,pz){
     const g=new THREE.Group();
@@ -360,7 +393,7 @@ function buildScene(canvas) {
     nearbyPlant:null, plantMeshes, plantPositions, ringMeshes,
   };
 
-  return {renderer,scene,camera,charGroup,lLG,rLG,lAG,rAG,raycaster,mouse,state};
+  return {renderer,scene,camera,charGroup,lLG,rLG,lAG,rAG,raycaster,mouse,state,creditsSign};
 }
 
 // ── Minimap ──────────────────────────────────────────────────────────────────
@@ -406,7 +439,7 @@ export default function ViridyanGarden() {
   useEffect(()=>{
     const canvas=canvasRef.current; if(!canvas) return;
     const refs=buildScene(canvas); sceneRef.current=refs;
-    const {renderer,scene,camera,charGroup,lLG,rLG,lAG,rAG,raycaster,mouse,state}=refs;
+    const {renderer,scene,camera,charGroup,lLG,rLG,lAG,rAG,raycaster,mouse,state,creditsSign}=refs;
 
     const onKD=e=>{state.keys[e.code]=true;};
     const onKU=e=>{state.keys[e.code]=false;};
@@ -480,6 +513,12 @@ export default function ViridyanGarden() {
       camera.position.lerp(new THREE.Vector3(camX,camY,camZ),dt*7);
       state.camTarget.lerp(new THREE.Vector3(state.pos.x,gy+1.2,state.pos.z),dt*8);
       camera.lookAt(state.camTarget);
+
+      if(creditsSign){
+        const dx=camera.position.x-creditsSign.position.x;
+        const dz=camera.position.z-creditsSign.position.z;
+        creditsSign.rotation.y=Math.atan2(dx,dz);
+      }
 
       // Proximity + rings
       let closest=null,closestD=Infinity;
